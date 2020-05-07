@@ -1,0 +1,97 @@
+<?php
+
+// php code to search data in mysql database and set it in input text
+
+if(isset($_POST['search']))
+{
+    // id to search
+    $Boxnumber = $_POST['Boxnumber'];
+    
+    // connect to mysql
+    $connect = mysqli_connect('db','root','it635','project');
+    
+    // mysql search query
+    $query = "SELECT Boxlocation, Boxtype, Connectiontype FROM boxes WHERE Boxnumber = $Boxnumber LIMIT 1";
+    
+    $result = mysqli_query($connect, $query);
+    
+    // if id exist 
+    // show data in inputs
+    if(mysqli_num_rows($result) > 0)
+    {
+      while ($row = mysqli_fetch_array($result))
+      {
+		echo $Boxnumber;
+		$Boxnumber = $row['Boxnumber'];  
+        $Boxlocation = $row['Boxlocation'];
+        $Boxtype = $row['Boxtype'];
+        $Connectiontype = $row['Connectiontype'];
+      }  
+    }
+    
+    // if the id not exist
+    // show a message and clear inputs
+    else {
+        echo "Undifined ID";
+            $Boxlocation = "";
+            $Boxtype = "";
+            $Connectiontype = "";
+    }
+    
+    
+    mysqli_free_result($result);
+    mysqli_close($connect);
+    
+}
+
+// in the first time inputs are empty
+else{
+			$Boxlocation = "";
+            $Boxtype = "";
+            $Connectiontype = "";
+}
+
+
+?>
+
+<!DOCTYPE html>
+
+<html>
+
+
+    <head>
+
+        <title> PHP FIND DATA </title>
+
+        <meta charset="UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=2.0">
+
+    </head>
+
+    <body>
+
+    <form name="form1" action="boxsearch.php" method="post" onsubmit="required()">
+
+        Boxnumber:<input type="text" name="Boxnumber"><br><br>
+
+        Boxlocation:<input type="text" name="Boxlocation" value="<?php echo $Boxlocation;?>"><br><br>
+
+        Boxtype:<input type="text" name="Boxtype" value="<?php echo $Boxtype;?>"><br><br>
+
+        Connectiontype:<input type="text" name="Connectiontype" value="<?php echo $Connectiontype;?>"><br><br>
+
+        <input type="submit" name="search" value="Find">
+
+           </form>
+
+
+	<script src="non-empty.js"></script>
+	
+    </body>
+	
+	
+
+
+
+</html>
